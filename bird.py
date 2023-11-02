@@ -5,6 +5,7 @@ from ball import Ball, BigBall
 import game_world
 import game_framework
 import random
+
 # Bird Run Speed
 
 # 30CMx30CM로 설정
@@ -40,24 +41,20 @@ class Run:
         if (bird.x > 1600 or bird.x < 0):
             bird.dir *= -1
 
-        if(int(bird.frame) == 0):
+        if (int(bird.frame) == 0):
             bird.action = 2
-        elif(int(bird.frame) == 5):
+        elif (int(bird.frame) == 5):
             bird.action = 1
         elif (int(bird.frame) == 10):
             bird.action = 0
 
-
-
-
-
     @staticmethod
     def draw(bird):
         if bird.dir == 1:
-            bird.image.clip_draw((int(bird.frame)%5) * 183, bird.action * 169 , 183, 169, bird.x, bird.y,
+            bird.image.clip_draw((int(bird.frame) % 5) * 183, bird.action * 169, 183, 169, bird.x, bird.y,
                                  100, 100)
         else:
-            bird.image.clip_composite_draw((int(bird.frame)%5) * 183, bird.action * 169 , 183, 169, 0,
+            bird.image.clip_composite_draw((int(bird.frame) % 5) * 183, bird.action * 169, 183, 169, 0,
                                            'h', bird.x, bird.y, 100, 100)
 
 
@@ -88,7 +85,7 @@ class StateMachine:
 
 class Bird:
     def __init__(self):
-        self.x, self.y = random.randint(1,1400), random.randint(400,500)
+        self.x, self.y = random.randint(1, 1400), random.randint(400, 500)
         self.frame = 0
         self.action = 0
         self.face_dir = 1
