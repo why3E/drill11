@@ -7,7 +7,7 @@ import game_framework
 import random
 # Bird Run Speed
 
-# 549 / 2 CM , 537 / 2 CM
+# 30CMx30CM로 설정
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 3 cm
 RUN_SPEED_KMPH = 10.0  # Km / Hour 시속 10키로미터
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -17,7 +17,8 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 # Bird Action Speed
 # fill here
-TIME_PER_ACTION = 0.8
+
+TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 5
 
@@ -25,7 +26,7 @@ FRAMES_PER_ACTION = 5
 class Run:
     @staticmethod
     def enter(bird):
-        bird.dir, bird.action, bird.face_dir = 1, 1, 1
+        bird.dir, bird.face_dir = 1, 1
 
     @staticmethod
     def exit(bird):
@@ -33,24 +34,31 @@ class Run:
 
     @staticmethod
     def do(bird):
-        bird.frame = (bird.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
+        bird.frame = (bird.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 14
+
         bird.x += bird.dir * RUN_SPEED_PPS * game_framework.frame_time
         if (bird.x > 1600 or bird.x < 0):
             bird.dir *= -1
-        if(bird.frame == 0):
-            bird.action += 1
-            bird.action %= 3
-        if(bird.action == 0 and bird.frame == 4):
-            bird.frame +=1
+
+        if(int(bird.frame) == 0):
+            bird.action = 2
+        elif(int(bird.frame) == 5):
+            bird.action = 1
+        elif (int(bird.frame) == 10):
+            bird.action = 0
+
+
+
+
 
     @staticmethod
     def draw(bird):
         if bird.dir == 1:
-            bird.image.clip_draw(int(bird.frame) * 183, bird.action * 169 , 183, 169, bird.x, bird.y,
-                                 183 / 2, 169 / 2)
+            bird.image.clip_draw((int(bird.frame)%5) * 183, bird.action * 169 , 183, 169, bird.x, bird.y,
+                                 100, 100)
         else:
-            bird.image.clip_composite_draw(int(bird.frame) * 183, bird.action * 169 , 183, 169, 0,
-                                           'h', bird.x, bird.y, 183 / 2, 169 / 2)
+            bird.image.clip_composite_draw((int(bird.frame)%5) * 183, bird.action * 169 , 183, 169, 0,
+                                           'h', bird.x, bird.y, 100, 100)
 
 
 class StateMachine:
@@ -82,7 +90,6 @@ class Bird:
     def __init__(self):
         self.x, self.y = random.randint(1,1400), random.randint(400,500)
         self.frame = 0
-        self.frame2 = 0
         self.action = 0
         self.face_dir = 1
         self.dir = 1
